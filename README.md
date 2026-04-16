@@ -22,6 +22,7 @@ A sleek, self-contained F1 2026 season countdown web app — no backend, no API 
 ---
 
 ## 🚀 Getting Started
+Click this link https://ycjanetchen.github.io/F1_countdown/
 
 No installation or build step required.
 
@@ -34,7 +35,7 @@ open f1_2026_gradient_btn.html
 ```
 
 Or just download the HTML file and double-click it. That's it.
-Or click this link 
+
 ---
 
 ## 📁 Project Structure
