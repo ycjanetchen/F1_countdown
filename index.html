@@ -104,6 +104,8 @@ canvas.aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer
 .mini-pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:4px;max-height:180px;overflow-y:auto}
 .mini-pool::-webkit-scrollbar{width:2px}
 .mini-pool::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.mini-handle{display:none;width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);margin:0 auto 6px}
+.mini-backdrop{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.5)}
 .mdc{position:relative;border-radius:3px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:#0a0a0e;padding:5px 6px;transition:border-color .12s,transform .12s}
 .mdc:hover{border-color:rgba(255,255,255,.25);transform:scale(1.04)}
 .mdc:active{transform:scale(.96)}
@@ -180,11 +182,17 @@ canvas.aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer
   .hs-l{font-size:9px}
   .change-btn{font-size:10px;padding:6px 10px}
 
-  /* Mini driver picker — scrollable team tabs */
-  .mini-pick{padding:.4rem 1rem .5rem}
+  /* Mini driver picker — full-screen bottom sheet on mobile */
+  .mini-pick{position:fixed;bottom:0;left:0;right:0;top:auto;max-width:100%;width:100%;max-height:72svh;padding:.5rem 1rem .75rem;z-index:100;border-bottom:none;border-top:1px solid rgba(255,255,255,.12);border-radius:14px 14px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.7)}
   .mini-filter{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .mini-filter::-webkit-scrollbar{display:none}
   .mftab{font-size:10px;padding:5px 9px}
+  .mini-pool{max-height:calc(72svh - 70px);grid-template-columns:repeat(4,1fr)}
+  .mdc{padding:7px 6px}
+  .mdc-top span:first-child{font-size:14px}
+  .mdc-top span:last-child{font-size:9px}
+  .mini-handle{display:block}
+  .mini-backdrop{display:block}
 
   /* Timezone bar */
   .tz-bar{padding:.4rem 1rem;flex-wrap:wrap;gap:6px}
@@ -275,7 +283,9 @@ canvas.aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer
       <button class="change-btn" onclick="toggleMiniPick()">⇄ Change</button>
     </div>
   </div>
+  <div class="mini-backdrop" id="mini-backdrop" onclick="toggleMiniPick()" style="opacity:0;pointer-events:none"></div>
   <div class="mini-pick" id="mini-pick">
+    <div class="mini-handle"></div>
     <div class="mini-filter" id="mini-filter"></div>
     <div class="mini-pool" id="mini-pool"></div>
   </div>
@@ -317,7 +327,7 @@ function buildTabs(){const bar=document.getElementById('filter-bar');['mclaren',
 function filterTeam(team,btn){curTeam=team;document.querySelectorAll('.ftab').forEach(b=>{b.classList.remove('on');b.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');});btn.classList.add('on');btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--tc);background:rgba(232,0,45,.18)');renderPool();}
 function renderPool(){const pool=document.getElementById('driver-pool');pool.innerHTML='';const list=curTeam==='all'?DRIVERS:DRIVERS.filter(d=>d.team===curTeam);list.forEach(d=>{const t=TEAMS[d.team],card=document.createElement('div');card.className='dc';card.innerHTML=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${t.tc}12,transparent)"></div><div class="dc-gbg"></div><div class="dc-glare"></div><div class="dc-accent" style="background:${t.tc};opacity:.55"></div><div class="dc-body"><div class="dc-top"><span class="dc-flag">${d.flag}</span><span style="font-size:11px;font-weight:700;font-family:monospace;color:#888">#${d.num}</span></div><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#fff;font-family:monospace">${d.abbr}</div><div style="font-size:9px;color:#bbb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px">${d.last}</div></div>`;card.onclick=()=>{selD={...d,t};goToCD();};card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),dx=(e.clientX-r.left-r.width/2)/r.width*8,dy=(e.clientY-r.top-r.height/2)/r.height*8;card.style.transform=`translateY(-3px) scale(1.04) translate(${dx}px,${dy}px)`;});card.addEventListener('mouseleave',()=>{card.style.transform='';});pool.appendChild(card);});}
 function goToCD(){showScreen('s-cd');startAurora('aurora-cd',selD.t.tc,'#060608',selD.t.tc);setupCD();startCd();document.getElementById('mini-pick').classList.remove('open');}
-function toggleMiniPick(){const mp=document.getElementById('mini-pick');const isOpen=mp.classList.contains('open');mp.classList.toggle('open');if(!isOpen){buildMiniTabs();renderMiniPool();}}
+function toggleMiniPick(){const mp=document.getElementById('mini-pick');const bd=document.getElementById('mini-backdrop');const isOpen=mp.classList.contains('open');mp.classList.toggle('open');if(bd)bd.style.opacity=isOpen?'0':'1',bd.style.pointerEvents=isOpen?'none':'auto';if(!isOpen){buildMiniTabs();renderMiniPool();}}
 function buildMiniTabs(){const bar=document.getElementById('mini-filter');bar.innerHTML='';const allBtn=document.createElement('button');allBtn.className='mftab on';allBtn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');allBtn.innerHTML=`<span class="mftab-dot" style="background:#e8002d"></span>ALL`;allBtn.onclick=()=>miniFilter('all',allBtn);bar.appendChild(allBtn);['mclaren','mercedes','ferrari','redbull','williams','aston','alpine','haas','rb','audi','cadillac'].forEach(tk=>{const t=TEAMS[tk],btn=document.createElement('button');btn.className='mftab';btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');btn.innerHTML=`<span class="mftab-dot" style="background:${t.tc}"></span>${t.n.split(' ').slice(0,2).join(' ').toUpperCase()}`;btn.onclick=()=>miniFilter(tk,btn);bar.appendChild(btn);});}
 function miniFilter(team,btn){miniTeam=team;document.querySelectorAll('.mftab').forEach(b=>{b.classList.remove('on');b.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');});btn.classList.add('on');btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--tc);background:rgba(232,0,45,.18)');renderMiniPool();}
 function renderMiniPool(){const pool=document.getElementById('mini-pool');pool.innerHTML='';const list=miniTeam==='all'?DRIVERS:DRIVERS.filter(d=>d.team===miniTeam);list.forEach(d=>{const t=TEAMS[d.team],card=document.createElement('div');card.className='mdc'+(selD&&selD.abbr===d.abbr?' sel':'');if(selD&&selD.abbr===d.abbr)card.style.borderColor=t.tc;card.innerHTML=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${t.tc}10,transparent)"></div><div class="mdc-top"><span style="font-size:12px">${d.flag}</span><span style="font-size:10px;font-family:monospace;color:#777">#${d.num}</span></div><div style="font-size:11px;font-weight:700;letter-spacing:.09em;color:#fff;font-family:monospace;position:relative;z-index:1">${d.abbr}</div><div style="font-size:8px;color:#bbb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative;z-index:1">${d.last}</div>`;card.onclick=()=>{selD={...d,t};startAurora('aurora-cd',t.tc,'#060608',t.tc);setupCD();document.getElementById('mini-pick').classList.remove('open');document.documentElement.style.setProperty('--tc',t.tc);renderMiniPool();};pool.appendChild(card);});}
