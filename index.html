@@ -151,6 +151,71 @@ canvas.aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer
 .sprint-badge::before{content:'⚡';font-size:9px}
 .tnx{font-size:8px;padding:3px 7px;border-radius:20px;background:rgba(232,0,45,.18);color:#ff6070;font-weight:700;letter-spacing:.07em;font-family:monospace;flex-shrink:0}
 #spark-cv{position:absolute;inset:0;pointer-events:none;z-index:50}
+
+/* ── Mobile responsive (≤ 480px) ── */
+@media(max-width:480px){
+  /* Full viewport height on mobile */
+  .screen{min-height:100svh}
+
+  /* Splash button */
+  .tap-inner{padding:12px 24px;font-size:14px}
+
+  /* Pick screen header */
+  .pick-hint{font-size:11px}
+
+  /* Filter bar — horizontal scroll instead of wrapping */
+  .filter-bar{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:.4rem .75rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .filter-bar::-webkit-scrollbar{display:none}
+  .ftab{font-size:11px;padding:6px 11px}
+
+  /* Driver card grid — slightly smaller min so 4 cards fit */
+  .driver-pool{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));padding:.3rem .75rem;max-height:calc(100svh - 155px)}
+  .dc{padding:9px 8px 8px}
+
+  /* Hero section */
+  .hero-inner{padding:.75rem 1rem;gap:10px}
+  .hero-eye{font-size:10px}
+  .hero-meta{font-size:11px}
+  .hs-v{font-size:12px}
+  .hs-l{font-size:9px}
+  .change-btn{font-size:10px;padding:6px 10px}
+
+  /* Mini driver picker — scrollable team tabs */
+  .mini-pick{padding:.4rem 1rem .5rem}
+  .mini-filter{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .mini-filter::-webkit-scrollbar{display:none}
+  .mftab{font-size:10px;padding:5px 9px}
+
+  /* Timezone bar */
+  .tz-bar{padding:.4rem 1rem;flex-wrap:wrap;gap:6px}
+  .tz-l{font-size:9px}
+  .tz-sel{max-width:100%;font-size:12px;padding:5px 8px}
+  .tz-now{font-size:10px}
+
+  /* Countdown body */
+  .cd-body{padding:.65rem 1rem 0}
+  .slabel{font-size:10px}
+
+  /* Race card */
+  .race-card{padding:.75rem .875rem .875rem}
+  .rc-rnd{font-size:9px}
+  .rc-n{font-size:15px}
+  .rc-tl{font-size:13px}
+  .rc-tu{font-size:10px}
+  .spr-tag{font-size:8px;padding:2px 5px}
+
+  /* Countdown digits — bigger on small screens */
+  .fn{font-size:clamp(22px,8vw,34px)}
+  .fl{font-size:10px}
+  .fb{max-width:none}
+
+  /* Upcoming race list */
+  .race-list-wrap{padding:0 1rem 1.5rem;max-height:none}
+  .rl-item{padding:8px 10px}
+  .rname{font-size:12px}
+  .rdate{font-size:10px}
+  .sprint-badge{display:none}
+}
 </style>
 </head>
 <body>
@@ -234,7 +299,7 @@ canvas.aurora{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer
 </div>
 <script>
 const TEAMS={mclaren:{n:'McLaren',tc:'#FF8000',eng:'Mercedes'},mercedes:{n:'Mercedes',tc:'#27F4D2',eng:'Mercedes'},ferrari:{n:'Ferrari',tc:'#E8002D',eng:'Ferrari'},redbull:{n:'Red Bull',tc:'#3671C6',eng:'Ford/RBPT'},williams:{n:'Williams',tc:'#64C4FF',eng:'Mercedes'},aston:{n:'Aston Martin',tc:'#358C75',eng:'Honda'},alpine:{n:'Alpine',tc:'#FF87BC',eng:'Mercedes'},haas:{n:'Haas',tc:'#B6BABD',eng:'Ferrari'},rb:{n:'Racing Bulls',tc:'#6692FF',eng:'Ford/RBPT'},audi:{n:'Audi',tc:'#52E252',eng:'Audi'},cadillac:{n:'Cadillac',tc:'#C8A85A',eng:'Ferrari'}};
-const DRIVERS=[{num:4,abbr:'NOR',name:'Lando Norris',last:'Norris',flag:'🇬🇧',team:'mclaren',pos:1,pts:76,wins:1,poles:1,fl:1},{num:81,abbr:'PIA',name:'Oscar Piastri',last:'Piastri',flag:'🇦🇺',team:'mclaren',pos:4,pts:51,wins:0,poles:0,fl:0},{num:63,abbr:'RUS',name:'George Russell',last:'Russell',flag:'🇬🇧',team:'mercedes',pos:2,pts:68,wins:1,poles:2,fl:1},{num:12,abbr:'ANT',name:'Kimi Antonelli',last:'Antonelli',flag:'🇮🇹',team:'mercedes',pos:3,pts:60,wins:2,poles:3,fl:0},{num:16,abbr:'LEC',name:'Charles Leclerc',last:'Leclerc',flag:'🇲🇨',team:'ferrari',pos:5,pts:44,wins:0,poles:0,fl:0},{num:44,abbr:'HAM',name:'Lewis Hamilton',last:'Hamilton',flag:'🇬🇧',team:'ferrari',pos:7,pts:36,wins:0,poles:0,fl:1},{num:1,abbr:'VER',name:'Max Verstappen',last:'Verstappen',flag:'🇳🇱',team:'redbull',pos:6,pts:42,wins:0,poles:0,fl:0},{num:40,abbr:'HAD',name:'Isack Hadjar',last:'Hadjar',flag:'🇫🇷',team:'redbull',pos:12,pts:14,wins:0,poles:0,fl:0},{num:55,abbr:'SAI',name:'Carlos Sainz',last:'Sainz',flag:'🇪🇸',team:'williams',pos:9,pts:22,wins:0,poles:0,fl:0},{num:23,abbr:'ALB',name:'Alex Albon',last:'Albon',flag:'🇹🇭',team:'williams',pos:11,pts:16,wins:0,poles:0,fl:0},{num:14,abbr:'ALO',name:'Fernando Alonso',last:'Alonso',flag:'🇪🇸',team:'aston',pos:10,pts:20,wins:0,poles:0,fl:0},{num:18,abbr:'STR',name:'Lance Stroll',last:'Stroll',flag:'🇨🇦',team:'aston',pos:16,pts:6,wins:0,poles:0,fl:0},{num:10,abbr:'GAS',name:'Pierre Gasly',last:'Gasly',flag:'🇫🇷',team:'alpine',pos:13,pts:12,wins:0,poles:0,fl:0},{num:43,abbr:'COL',name:'Franco Colapinto',last:'Colapinto',flag:'🇦🇷',team:'alpine',pos:18,pts:4,wins:0,poles:0,fl:0},{num:31,abbr:'OCO',name:'Esteban Ocon',last:'Ocon',flag:'🇫🇷',team:'haas',pos:14,pts:10,wins:0,poles:0,fl:0},{num:87,abbr:'BEA',name:'Oliver Bearman',last:'Bearman',flag:'🇬🇧',team:'haas',pos:15,pts:8,wins:0,poles:0,fl:0},{num:30,abbr:'LAW',name:'Liam Lawson',last:'Lawson',flag:'🇳🇿',team:'rb',pos:17,pts:5,wins:0,poles:0,fl:0},{num:45,abbr:'LIN',name:'Arvid Lindblad',last:'Lindblad',flag:'🇸🇪',team:'rb',pos:20,pts:2,wins:0,poles:0,fl:0},{num:27,abbr:'HUL',name:'Nico Hülkenberg',last:'Hülkenberg',flag:'🇩🇪',team:'audi',pos:8,pts:24,wins:0,poles:0,fl:0},{num:5,abbr:'BOR',name:'Gabriel Bortoleto',last:'Bortoleto',flag:'🇧🇷',team:'audi',pos:19,pts:3,wins:0,poles:0,fl:0},{num:11,abbr:'PER',name:'Sergio Pérez',last:'Pérez',flag:'🇲🇽',team:'cadillac',pos:21,pts:1,wins:0,poles:0,fl:0},{num:77,abbr:'BOT',name:'Valtteri Bottas',last:'Bottas',flag:'🇫🇮',team:'cadillac',pos:22,pts:0,wins:0,poles:0,fl:0}];
+const DRIVERS=[{num:1,abbr:'NOR',name:'Lando Norris',last:'Norris',flag:'🇬🇧',team:'mclaren',pos:1,pts:76,wins:1,poles:1,fl:1},{num:81,abbr:'PIA',name:'Oscar Piastri',last:'Piastri',flag:'🇦🇺',team:'mclaren',pos:4,pts:51,wins:0,poles:0,fl:0},{num:63,abbr:'RUS',name:'George Russell',last:'Russell',flag:'🇬🇧',team:'mercedes',pos:2,pts:68,wins:1,poles:2,fl:1},{num:12,abbr:'ANT',name:'Kimi Antonelli',last:'Antonelli',flag:'🇮🇹',team:'mercedes',pos:3,pts:60,wins:2,poles:3,fl:0},{num:16,abbr:'LEC',name:'Charles Leclerc',last:'Leclerc',flag:'🇲🇨',team:'ferrari',pos:5,pts:44,wins:0,poles:0,fl:0},{num:44,abbr:'HAM',name:'Lewis Hamilton',last:'Hamilton',flag:'🇬🇧',team:'ferrari',pos:7,pts:36,wins:0,poles:0,fl:1},{num:3,abbr:'VER',name:'Max Verstappen',last:'Verstappen',flag:'🇳🇱',team:'redbull',pos:6,pts:42,wins:0,poles:0,fl:0},{num:40,abbr:'HAD',name:'Isack Hadjar',last:'Hadjar',flag:'🇫🇷',team:'redbull',pos:12,pts:14,wins:0,poles:0,fl:0},{num:55,abbr:'SAI',name:'Carlos Sainz',last:'Sainz',flag:'🇪🇸',team:'williams',pos:9,pts:22,wins:0,poles:0,fl:0},{num:23,abbr:'ALB',name:'Alex Albon',last:'Albon',flag:'🇹🇭',team:'williams',pos:11,pts:16,wins:0,poles:0,fl:0},{num:14,abbr:'ALO',name:'Fernando Alonso',last:'Alonso',flag:'🇪🇸',team:'aston',pos:10,pts:20,wins:0,poles:0,fl:0},{num:18,abbr:'STR',name:'Lance Stroll',last:'Stroll',flag:'🇨🇦',team:'aston',pos:16,pts:6,wins:0,poles:0,fl:0},{num:10,abbr:'GAS',name:'Pierre Gasly',last:'Gasly',flag:'🇫🇷',team:'alpine',pos:13,pts:12,wins:0,poles:0,fl:0},{num:43,abbr:'COL',name:'Franco Colapinto',last:'Colapinto',flag:'🇦🇷',team:'alpine',pos:18,pts:4,wins:0,poles:0,fl:0},{num:31,abbr:'OCO',name:'Esteban Ocon',last:'Ocon',flag:'🇫🇷',team:'haas',pos:14,pts:10,wins:0,poles:0,fl:0},{num:87,abbr:'BEA',name:'Oliver Bearman',last:'Bearman',flag:'🇬🇧',team:'haas',pos:15,pts:8,wins:0,poles:0,fl:0},{num:30,abbr:'LAW',name:'Liam Lawson',last:'Lawson',flag:'🇳🇿',team:'rb',pos:17,pts:5,wins:0,poles:0,fl:0},{num:41,abbr:'LIN',name:'Arvid Lindblad',last:'Lindblad',flag:'🇸🇪',team:'rb',pos:20,pts:2,wins:0,poles:0,fl:0},{num:27,abbr:'HUL',name:'Nico Hülkenberg',last:'Hülkenberg',flag:'🇩🇪',team:'audi',pos:8,pts:24,wins:0,poles:0,fl:0},{num:5,abbr:'BOR',name:'Gabriel Bortoleto',last:'Bortoleto',flag:'🇧🇷',team:'audi',pos:19,pts:3,wins:0,poles:0,fl:0},{num:11,abbr:'PER',name:'Sergio Pérez',last:'Pérez',flag:'🇲🇽',team:'cadillac',pos:21,pts:1,wins:0,poles:0,fl:0},{num:77,abbr:'BOT',name:'Valtteri Bottas',last:'Bottas',flag:'🇫🇮',team:'cadillac',pos:22,pts:0,wins:0,poles:0,fl:0}];
 const RACES=[{r:1,n:'Australian GP',c:'Albert Park',f:'🇦🇺',d:new Date('2026-03-08T05:00:00Z'),s:false},{r:2,n:'Chinese GP',c:'Shanghai',f:'🇨🇳',d:new Date('2026-03-15T07:00:00Z'),s:true},{r:3,n:'Japanese GP',c:'Suzuka',f:'🇯🇵',d:new Date('2026-03-29T05:00:00Z'),s:false},{r:4,n:'Miami GP',c:'Miami Autodrome',f:'🇺🇸',d:new Date('2026-05-03T19:00:00Z'),s:true},{r:5,n:'Canadian GP',c:'Circuit Gilles V.',f:'🇨🇦',d:new Date('2026-05-24T18:00:00Z'),s:true},{r:6,n:'Monaco GP',c:'Circuit de Monaco',f:'🇲🇨',d:new Date('2026-06-07T13:00:00Z'),s:false},{r:7,n:'Barcelona-Cat. GP',c:'Catalunya',f:'🇪🇸',d:new Date('2026-06-14T13:00:00Z'),s:false},{r:8,n:'Austrian GP',c:'Red Bull Ring',f:'🇦🇹',d:new Date('2026-06-28T13:00:00Z'),s:false},{r:9,n:'British GP',c:'Silverstone',f:'🇬🇧',d:new Date('2026-07-05T14:00:00Z'),s:true},{r:10,n:'Belgian GP',c:'Spa-Francorchamps',f:'🇧🇪',d:new Date('2026-07-19T13:00:00Z'),s:false},{r:11,n:'Hungarian GP',c:'Hungaroring',f:'🇭🇺',d:new Date('2026-07-26T13:00:00Z'),s:false},{r:12,n:'Dutch GP',c:'Zandvoort',f:'🇳🇱',d:new Date('2026-08-23T13:00:00Z'),s:true},{r:13,n:'Italian GP',c:'Monza',f:'🇮🇹',d:new Date('2026-09-06T13:00:00Z'),s:false},{r:14,n:'Spanish GP',c:'Madrid NEW',f:'🇪🇸',d:new Date('2026-09-13T13:00:00Z'),s:false},{r:15,n:'Azerbaijan GP',c:'Baku',f:'🇦🇿',d:new Date('2026-09-26T11:00:00Z'),s:false},{r:16,n:'Singapore GP',c:'Marina Bay',f:'🇸🇬',d:new Date('2026-10-11T09:00:00Z'),s:true},{r:17,n:'US GP',c:'COTA',f:'🇺🇸',d:new Date('2026-10-25T19:00:00Z'),s:false},{r:18,n:'Mexico City GP',c:'Hermanos Rodriguez',f:'🇲🇽',d:new Date('2026-11-01T20:00:00Z'),s:false},{r:19,n:'Sao Paulo GP',c:'Interlagos',f:'🇧🇷',d:new Date('2026-11-08T17:00:00Z'),s:false},{r:20,n:'Las Vegas GP',c:'Las Vegas Strip',f:'🇺🇸',d:new Date('2026-11-21T06:00:00Z'),s:false},{r:21,n:'Qatar GP',c:'Lusail Circuit',f:'🇶🇦',d:new Date('2026-11-29T16:00:00Z'),s:false},{r:22,n:'Abu Dhabi GP',c:'Yas Marina',f:'🇦🇪',d:new Date('2026-12-06T13:00:00Z'),s:false}];
 const TZ_LIST=[{label:'UTC+8  Taipei / HK',tz:'Asia/Taipei'},{label:'UTC+8  Beijing',tz:'Asia/Shanghai'},{label:'UTC+9  Tokyo',tz:'Asia/Tokyo'},{label:'UTC+10 Sydney',tz:'Australia/Sydney'},{label:'UTC+0  London',tz:'Europe/London'},{label:'UTC+1  Paris / Berlin',tz:'Europe/Paris'},{label:'UTC+3  Moscow',tz:'Europe/Moscow'},{label:'UTC+4  Dubai',tz:'Asia/Dubai'},{label:'UTC+5:30 Mumbai',tz:'Asia/Kolkata'},{label:'UTC+7  Bangkok',tz:'Asia/Bangkok'},{label:'UTC-4  New York',tz:'America/New_York'},{label:'UTC-6  Chicago',tz:'America/Chicago'},{label:'UTC-8  Los Angeles',tz:'America/Los_Angeles'},{label:'UTC-3  Sao Paulo',tz:'America/Sao_Paulo'}];
 let selD=null,selTz=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',cdTimer=null,prevSec=-1,auroraId=null,curTeam='all',miniTeam='all';
@@ -248,12 +313,12 @@ let rotIdx=0,rotTimer=null;
 function startRotating(){const els=rotWords.map((_,i)=>document.getElementById('rw'+i));els[0].classList.add('in');document.getElementById('tap-wrap').style.display='inline-block';rotTimer=setInterval(()=>{const cur=els[rotIdx];cur.classList.remove('in');cur.classList.add('out');setTimeout(()=>{cur.classList.remove('out');},420);rotIdx=(rotIdx+1)%rotWords.length;setTimeout(()=>{els[rotIdx].classList.add('in');},420);},2200);}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function goToPick(){clearInterval(rotTimer);showScreen('s-pick');startAurora('aurora-pick','#3a0010','#060608','#1a0030');buildTabs();renderPool();}
-function buildTabs(){const bar=document.getElementById('filter-bar');['mclaren','mercedes','ferrari','redbull','williams','aston','alpine','haas','rb','audi','cadillac'].forEach(tk=>{const t=TEAMS[tk],btn=document.createElement('button');btn.className='ftab';btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');btn.innerHTML=`<span class="ftab-dot" style="background:${t.tc}"></span>${t.n.split(' ')[0].toUpperCase()}`;btn.onclick=()=>filterTeam(tk,btn);bar.appendChild(btn);});}
+function buildTabs(){const bar=document.getElementById('filter-bar');['mclaren','mercedes','ferrari','redbull','williams','aston','alpine','haas','rb','audi','cadillac'].forEach(tk=>{const t=TEAMS[tk],btn=document.createElement('button');btn.className='ftab';btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');btn.innerHTML=`<span class="ftab-dot" style="background:${t.tc}"></span>${t.n.split(' ').slice(0,2).join(' ').toUpperCase()}`;btn.onclick=()=>filterTeam(tk,btn);bar.appendChild(btn);});}
 function filterTeam(team,btn){curTeam=team;document.querySelectorAll('.ftab').forEach(b=>{b.classList.remove('on');b.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');});btn.classList.add('on');btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--tc);background:rgba(232,0,45,.18)');renderPool();}
 function renderPool(){const pool=document.getElementById('driver-pool');pool.innerHTML='';const list=curTeam==='all'?DRIVERS:DRIVERS.filter(d=>d.team===curTeam);list.forEach(d=>{const t=TEAMS[d.team],card=document.createElement('div');card.className='dc';card.innerHTML=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${t.tc}12,transparent)"></div><div class="dc-gbg"></div><div class="dc-glare"></div><div class="dc-accent" style="background:${t.tc};opacity:.55"></div><div class="dc-body"><div class="dc-top"><span class="dc-flag">${d.flag}</span><span style="font-size:11px;font-weight:700;font-family:monospace;color:#888">#${d.num}</span></div><div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:#fff;font-family:monospace">${d.abbr}</div><div style="font-size:9px;color:#bbb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px">${d.last}</div></div>`;card.onclick=()=>{selD={...d,t};goToCD();};card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),dx=(e.clientX-r.left-r.width/2)/r.width*8,dy=(e.clientY-r.top-r.height/2)/r.height*8;card.style.transform=`translateY(-3px) scale(1.04) translate(${dx}px,${dy}px)`;});card.addEventListener('mouseleave',()=>{card.style.transform='';});pool.appendChild(card);});}
 function goToCD(){showScreen('s-cd');startAurora('aurora-cd',selD.t.tc,'#060608',selD.t.tc);setupCD();startCd();document.getElementById('mini-pick').classList.remove('open');}
 function toggleMiniPick(){const mp=document.getElementById('mini-pick');const isOpen=mp.classList.contains('open');mp.classList.toggle('open');if(!isOpen){buildMiniTabs();renderMiniPool();}}
-function buildMiniTabs(){const bar=document.getElementById('mini-filter');bar.innerHTML='';const allBtn=document.createElement('button');allBtn.className='mftab on';allBtn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');allBtn.innerHTML=`<span class="mftab-dot" style="background:#e8002d"></span>ALL`;allBtn.onclick=()=>miniFilter('all',allBtn);bar.appendChild(allBtn);['mclaren','mercedes','ferrari','redbull','williams','aston','alpine','haas','rb','audi','cadillac'].forEach(tk=>{const t=TEAMS[tk],btn=document.createElement('button');btn.className='mftab';btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');btn.innerHTML=`<span class="mftab-dot" style="background:${t.tc}"></span>${t.n.split(' ')[0].toUpperCase()}`;btn.onclick=()=>miniFilter(tk,btn);bar.appendChild(btn);});}
+function buildMiniTabs(){const bar=document.getElementById('mini-filter');bar.innerHTML='';const allBtn=document.createElement('button');allBtn.className='mftab on';allBtn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');allBtn.innerHTML=`<span class="mftab-dot" style="background:#e8002d"></span>ALL`;allBtn.onclick=()=>miniFilter('all',allBtn);bar.appendChild(allBtn);['mclaren','mercedes','ferrari','redbull','williams','aston','alpine','haas','rb','audi','cadillac'].forEach(tk=>{const t=TEAMS[tk],btn=document.createElement('button');btn.className='mftab';btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');btn.innerHTML=`<span class="mftab-dot" style="background:${t.tc}"></span>${t.n.split(' ').slice(0,2).join(' ').toUpperCase()}`;btn.onclick=()=>miniFilter(tk,btn);bar.appendChild(btn);});}
 function miniFilter(team,btn){miniTeam=team;document.querySelectorAll('.mftab').forEach(b=>{b.classList.remove('on');b.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important');});btn.classList.add('on');btn.setAttribute('style','color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--tc);background:rgba(232,0,45,.18)');renderMiniPool();}
 function renderMiniPool(){const pool=document.getElementById('mini-pool');pool.innerHTML='';const list=miniTeam==='all'?DRIVERS:DRIVERS.filter(d=>d.team===miniTeam);list.forEach(d=>{const t=TEAMS[d.team],card=document.createElement('div');card.className='mdc'+(selD&&selD.abbr===d.abbr?' sel':'');if(selD&&selD.abbr===d.abbr)card.style.borderColor=t.tc;card.innerHTML=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${t.tc}10,transparent)"></div><div class="mdc-top"><span style="font-size:12px">${d.flag}</span><span style="font-size:10px;font-family:monospace;color:#777">#${d.num}</span></div><div style="font-size:11px;font-weight:700;letter-spacing:.09em;color:#fff;font-family:monospace;position:relative;z-index:1">${d.abbr}</div><div style="font-size:8px;color:#bbb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative;z-index:1">${d.last}</div>`;card.onclick=()=>{selD={...d,t};startAurora('aurora-cd',t.tc,'#060608',t.tc);setupCD();document.getElementById('mini-pick').classList.remove('open');document.documentElement.style.setProperty('--tc',t.tc);renderMiniPool();};pool.appendChild(card);});}
 function getNext(){return RACES.find(r=>r.d.getTime()>Date.now())||RACES[RACES.length-1];}
