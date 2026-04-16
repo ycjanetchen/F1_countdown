@@ -34,14 +34,14 @@ open f1_2026_gradient_btn.html
 ```
 
 Or just download the HTML file and double-click it. That's it.
-
+Or click this link 
 ---
 
 ## 📁 Project Structure
 
 ```
 f1-countdown-2026/
-└── f1_2026_gradient_btn.html   # The entire app — HTML + CSS + JS in one file
+└── f1_2026_gradient_btn.html   
 ```
 
 ---
